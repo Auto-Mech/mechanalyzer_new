@@ -48,7 +48,7 @@ def update_spc_dct(spc_infos, spc_dct, rename=False, enant_label=True,
     # when making name dictionary
     has_inf = False
     if spc_infos:
-        if not isinstance(spc_ichs[0], str):
+        if not isinstance(spc_infos[0], str):
             has_inf = True
 
     _info_name_dct = ich_name_dct(spc_dct, incl_mult=has_inf, incl_chg=has_inf)
