@@ -84,12 +84,11 @@ def get_itslice(ktp, it):
 
 
 # Setters
-def set_rates(ktp, rates):
+def set_rates(ktp, rates, pres, temp):
     """
     DOES NOT WORK YET. Still fixing!
     Sets the KTP values
     """
 
-    #ktp = ktp.loc[rates]
-    #return ktp
-    pass
+    ktp.loc[dict(pres=pres, temp=temp)] = rates
+    return ktp
