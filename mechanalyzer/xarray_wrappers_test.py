@@ -51,8 +51,11 @@ def test_get_ipslice():
 def test_get_itslice():
     itslice = xarray_wrappers.get_itslice(Ktp, 0)
     print(itslice)
+
+def test_set_rates():
+    new_rates = xarray_wrappers.set_rates(Ktp, 1e11, 10, 2000)
+    print(new_rates)
     
-test_set_rates()
 test_get_pressures()
 test_get_temperatures()
 test_get_values()
@@ -61,3 +64,4 @@ test_get_tslice()
 test_get_spec_vals()
 test_get_ipslice()
 test_get_itslice()
+test_set_rates()

@@ -538,7 +538,7 @@ def reverse_rxn_ktp_dct(rxn_ktp_dct1, rxn_ktp_dct2, spc_therm_dct2, temps, rev_r
     for rxn1 in rxn_ktp_dct1.keys():  # search through all rxns in rxn_ktp_dct1
         rxn2, rev_rate = assess_rxn_match(rxn1, rxn_ktp_dct2)
         # Only do something if a match was found
-        if rxn2 is not None:
+        if rxn2 is not None and rxn2 in rev_rxn_ktp_dct2:
             # If the user indicated to reverse rates, check if they need to be
             if rev_rates:
                 if rev_rate:
@@ -628,10 +628,8 @@ def assess_rxn_match(rxn1, rxn_ktp_dct2):
         are_same = False
         if third_bod1 == third_bod2:
             are_same = True
-        #elif third_bod1 is None and third_bod2 == '(+M)':
         elif third_bod1 is None and third_bod2 in ('(+M)', '+M'):
             are_same = True
-        #elif third_bod1 == '(+M)' and third_bod2 is None:
         elif third_bod1 in ('(+M)', '+M') and third_bod2 is None:
             are_same = True
 
