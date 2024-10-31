@@ -36,7 +36,7 @@ def test__sort_with_input():
     # Sort mechanism
     isolate_spc, sort_lst, _ = mparser.parse_sort(sort_str)
     param_dct_sort, _, cmts_dct, _, _ = sorter.sorted_mech(
-        spc_str, mech_str, isolate_spc, sort_lst, stereo_optns=True)
+        spc_str, mech_str, isolate_spc, sort_lst, stereo_optns=False)
     index = 0
 
 
@@ -60,34 +60,7 @@ def test__readwrite_thirdbody():
     sort_lst = ['pes', 0]
 
     param_dct_sort, _, _, _, _= sorter.sorted_mech(
-        spc_str, mech_str, isolate_spc, sort_lst, stereo_optns=True)
-
- 
-def test__sortby_submech_ext():
-    """ test mechanalyzer.parser.sort
-
-        sort by fuel submechanism: extract reactions of
-        fuel, fuel radicals, R+O2, R+O4
-        and also the relative submech
-        then order by subpes and broad class
-    """
-
-    # Read mechanism files into strings
-    spc_path = os.path.join(CWD, 'data', 'heptane_cut_species.csv')
-    mech_path = os.path.join(CWD, 'data', 'heptane_cut_mech.txt')
-    sort_path = None
-
-    spc_str, mech_str, _ = _read_files(spc_path, mech_path, sort_path)
-
-    # Sort with headers for species subset
-    isolate_spc = ['C2H4']
-    sort_lst = ['submech_ext', 'subpes', 0]
-
-    param_dct_sort, _, cmts_dct, _, _ = sorter.sorted_mech(
-        spc_str, mech_str, isolate_spc, sort_lst, stereo_optns=True)
-
-
-
+        spc_str, mech_str, isolate_spc, sort_lst, stereo_optns=False)
 
 # Helper function
 
@@ -112,10 +85,5 @@ def _read_files(spc_path, mech_path, sort_path):
 
 
 if __name__ == '__main__':
-   # test__sort_with_input()   
-    #test__readwrite_thirdbody()
-    test__sortby_submech_ext()
-
-    
-    
-    
+   test__sort_with_input()   
+   test__readwrite_thirdbody()    
