@@ -29,37 +29,6 @@ def test__csv_io():
     assert ref_csv_str == csv_str
 
 
-# builders
-def test__spc_dct_build():
-    """ test mechanalyzer.parser.spc.spc_dct_from_smiles
-    """
-
-    ref_spc_dct = {
-        'C2H6': {
-            'smiles': 'CC',
-            'inchi': 'InChI=1S/C2H6/c1-2/h1-2H3',
-            'inchikey': 'OTMSDBZUPAUEDD-UHFFFAOYSA-N',
-            'charge': 0, 'mult': 1,
-            'mc_nsamp': (True, 3, 1, 3, 100, 12),
-            'hind_inc': 0.5235987755982988,
-            'hbond_cutoffs': (4.55, 1.92)},
-        'C2H5ClO': {
-            'smiles': 'C[C@@H](O)Cl',
-            'inchi': 'InChI=1S/C2H5ClO/c1-2(3)4/h2,4H,1H3/t2-/m1/s1',
-            'inchikey': 'KJESGYZFVCIMDE-UWTATZPHSA-N',
-            'charge': 0, 'mult': 1,
-            'mc_nsamp': (True, 3, 1, 3, 100, 12),
-            'hind_inc': 0.5235987755982988,
-            'hbond_cutoffs': (4.55, 1.92)}
-    }
-
-    spc_dct = mechanalyzer.parser.spc.spc_dct_from_smiles(
-        SMILES, stereo=True)
-    assert set(ref_spc_dct.keys()) == set(spc_dct.keys())
-    for name, ref_dct in ref_spc_dct.items():
-        assert set(ref_dct.keys()) == set(spc_dct[name].keys())
-
-
 # modify/add functionality
 def test__mod_spc_dct_atomcount():
     """ test mechanalyzer.parser.new_spc.reorder_by_atomcount
@@ -112,43 +81,53 @@ def test__mod_spc_dct_hof_basis():
             'inchi': 'InChI=1S/CH4/h1H4'},
         'H2O': {
             'inchi': 'InChI=1S/H2O/h1H2'},
-        'cbh0_[HH]': {
-            'smiles': '[HH]',
+        'cbh0_[H][H]': {
+            'smiles': '[H][H]',
             'inchi': 'InChI=1S/H2/h1H',
+            'canon_enant_ich': 'InChI=1S/H2/h1H',
             'inchikey': 'UFHFLCQGNIYNRP-UHFFFAOYSA-N',
-            'charge': 0, 'mult': 1,
-            'mc_nsamp': (True, 3, 1, 3, 100, 12),
-            'hind_inc': 0.5235987755982988,
-            'hbond_cutoffs': (4.55, 1.92)},
-        'cbh1_CC': {
-            'smiles': 'CC',
-            'inchi': 'InChI=1S/C2H6/c1-2/h1-2H3',
-            'inchikey': 'OTMSDBZUPAUEDD-UHFFFAOYSA-N',
-            'charge': 0, 'mult': 1,
+            'charge': 0, 'mult': 1, 
+	    'fml': {'H', 2},
             'mc_nsamp': (True, 3, 1, 3, 100, 12),
             'hind_inc': 0.5235987755982988,
             'hbond_cutoffs': (4.55, 1.92)},
         'cbh1_CO': {
             'smiles': 'CO',
             'inchi': 'InChI=1S/CH4O/c1-2/h2H,1H3',
+            'canon_enant_ich': 'InChI=1S/CH4O/c1-2/h2H,1H3', 
             'inchikey': 'OKKJLVBELUTLKV-UHFFFAOYSA-N',
+            'charge': 0, 'mult': 1, 
+	    'fml': {'C': 1, 'H': 4, 'O': 1}, 
+            'mc_nsamp': (True, 3, 1, 3, 100, 12),
+            'hind_inc': 0.5235987755982988,
+            'hbond_cutoffs': (4.55, 1.92)},
+        'cbh1_CC': {
+            'smiles': 'CC',
+            'inchi': 'InChI=1S/C2H6/c1-2/h1-2H3',
+	    'canon_enant_ich': 'InChI=1S/C2H6/c1-2/h1-2H3', 
+            'inchikey': 'OTMSDBZUPAUEDD-UHFFFAOYSA-N',
             'charge': 0, 'mult': 1,
+	    'fml': {'C': 2, 'H': 6}, 
             'mc_nsamp': (True, 3, 1, 3, 100, 12),
             'hind_inc': 0.5235987755982988,
             'hbond_cutoffs': (4.55, 1.92)},
         'cbh2_CCC': {
             'smiles': 'CCC',
             'inchi': 'InChI=1S/C3H8/c1-3-2/h3H2,1-2H3',
+	    'canon_enant_ich': 'InChI=1S/C3H8/c1-3-2/h3H2,1-2H3', 
             'inchikey': 'ATUOYWHBWRKTHZ-UHFFFAOYSA-N',
             'charge': 0, 'mult': 1,
+            'fml': {'C': 3, 'H': 8}, 
             'mc_nsamp': (True, 3, 1, 3, 100, 12),
             'hind_inc': 0.5235987755982988,
             'hbond_cutoffs': (4.55, 1.92)},
         'cbh2_CCO': {
             'smiles': 'CCO',
             'inchi': 'InChI=1S/C2H6O/c1-2-3/h3H,2H2,1H3',
+	    'canon_enant_ich': 'InChI=1S/C2H6O/c1-2-3/h3H,2H2,1H3', 
             'inchikey': 'LFQSCWFLJHTTHZ-UHFFFAOYSA-N',
             'charge': 0, 'mult': 1,
+	    'fml': {'C': 2, 'H': 6, 'O': 1}, 
             'mc_nsamp': (True, 3, 1, 3, 100, 12),
             'hind_inc': 0.523598775598298,
             'hbond_cutoffs': (4.55, 1.92)}
@@ -203,7 +182,6 @@ def test__mod_spc_dct_stereo():
 
 if __name__ == '__main__':
     test__csv_io()
-    # test__spc_dct_build() #broken
     test__mod_spc_dct_atomcount()
-    # test__mod_spc_dct_hof_basis() #broken
+    test__mod_spc_dct_hof_basis()
     test__mod_spc_dct_stereo()

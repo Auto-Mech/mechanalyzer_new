@@ -120,32 +120,6 @@ def build_spc_dct(spc_str, spc_type):
     return spc_dct
 
 
-# Build a spc dct from constituent information
-def spc_dct_from_smiles(smiles_lst, stereo=False):
-    """ Build a spc dct from a set of smiles
-    """
-
-    # Initialize empty formula dct
-    fml_count_dct = {}
-
-    spc_dct = {}
-    for smi in smiles_lst:
-        # Generate InChI string and formula
-        ich = automol.smiles.chi(smi)
-        if stereo:
-            ich = automol.chi.add_stereo(ich)
-
-        # Generate Name
-        fml = automol.chi.formula_layer(ich)
-        name, fml_count_dct = assign_unique_name(
-            fml, fml_count_dct, spc_dct)
-
-        # Add species dictionary
-        spc_dct.update({name: thermfit.create_spec(ich)})
-
-    return spc_dct
-
-
 # Modify an existing spc_dct
 def reorder_by_atomcount(spc_dct):
     """ Returns a species dictionary ordered by increasing N of atoms

@@ -132,7 +132,7 @@ def unique_basis_species(basis_dct, spc_dct):
         )
 
     # Generate list of all species currently in the spc dct
-    mech_ichs = tuple(spc_dct[spc]['canon_enant_ich'] for spc in spc_dct.keys()
+    mech_ichs = tuple(spc_dct[spc]['inchi'] for spc in spc_dct.keys()
                       if 'ts' not in spc)
 
     # Generate list of all prospective basis species
