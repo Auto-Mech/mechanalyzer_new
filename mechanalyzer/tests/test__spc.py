@@ -69,25 +69,31 @@ def test__mod_spc_dct_hof_basis():
     """
 
     spc_dct = {
-        'C4H9OH': {'inchi': 'InChI=1S/C4H10O/c1-2-3-4-5/h5H,2-4H2,1H3'},
-        'CH4': {'inchi': 'InChI=1S/CH4/h1H4'},
-        'H2O': {'inchi': 'InChI=1S/H2O/h1H2'}
+        'C4H9OH': {'inchi': 'InChI=1S/C4H10O/c1-2-3-4-5/h5H,2-4H2,1H3', 
+                   'canon_enant_ich': 'InChI=1S/C4H10O/c1-2-3-4-5/h5H,2-4H2,1H3'},
+        'CH4': {'inchi': 'InChI=1S/CH4/h1H4', 
+                'canon_enant_ich': 'InChI=1S/CH4/h1H4'},
+        'H2O': {'inchi': 'InChI=1S/H2O/h1H2', 
+                'canon_enant_ich': 'InChI=1S/H2O/h1H2'},
     }
 
     ref_spc_dct = {
         'C4H9OH': {
-            'inchi': 'InChI=1S/C4H10O/c1-2-3-4-5/h5H,2-4H2,1H3'},
+            'inchi': 'InChI=1S/C4H10O/c1-2-3-4-5/h5H,2-4H2,1H3',
+            'canon_enant_ich': 'InChI=1S/C4H10O/c1-2-3-4-5/h5H,2-4H2,1H3'},
         'CH4': {
-            'inchi': 'InChI=1S/CH4/h1H4'},
+            'inchi': 'InChI=1S/CH4/h1H4',
+            'canon_enant_ich': 'InChI=1S/CH4/h1H4'},
         'H2O': {
-            'inchi': 'InChI=1S/H2O/h1H2'},
+            'inchi': 'InChI=1S/H2O/h1H2',
+            'canon_enant_ich': 'InChI=1S/H2O/h1H2'},
         'cbh0_[H][H]': {
             'smiles': '[H][H]',
             'inchi': 'InChI=1S/H2/h1H',
             'canon_enant_ich': 'InChI=1S/H2/h1H',
             'inchikey': 'UFHFLCQGNIYNRP-UHFFFAOYSA-N',
             'charge': 0, 'mult': 1, 
-	    'fml': {'H', 2},
+	        'fml': {'H', 2},
             'mc_nsamp': (True, 3, 1, 3, 100, 12),
             'hind_inc': 0.5235987755982988,
             'hbond_cutoffs': (4.55, 1.92)},
@@ -97,24 +103,24 @@ def test__mod_spc_dct_hof_basis():
             'canon_enant_ich': 'InChI=1S/CH4O/c1-2/h2H,1H3', 
             'inchikey': 'OKKJLVBELUTLKV-UHFFFAOYSA-N',
             'charge': 0, 'mult': 1, 
-	    'fml': {'C': 1, 'H': 4, 'O': 1}, 
+	        'fml': {'C': 1, 'H': 4, 'O': 1}, 
             'mc_nsamp': (True, 3, 1, 3, 100, 12),
             'hind_inc': 0.5235987755982988,
             'hbond_cutoffs': (4.55, 1.92)},
         'cbh1_CC': {
             'smiles': 'CC',
             'inchi': 'InChI=1S/C2H6/c1-2/h1-2H3',
-	    'canon_enant_ich': 'InChI=1S/C2H6/c1-2/h1-2H3', 
+	        'canon_enant_ich': 'InChI=1S/C2H6/c1-2/h1-2H3', 
             'inchikey': 'OTMSDBZUPAUEDD-UHFFFAOYSA-N',
             'charge': 0, 'mult': 1,
-	    'fml': {'C': 2, 'H': 6}, 
+	        'fml': {'C': 2, 'H': 6}, 
             'mc_nsamp': (True, 3, 1, 3, 100, 12),
             'hind_inc': 0.5235987755982988,
             'hbond_cutoffs': (4.55, 1.92)},
         'cbh2_CCC': {
             'smiles': 'CCC',
             'inchi': 'InChI=1S/C3H8/c1-3-2/h3H2,1-2H3',
-	    'canon_enant_ich': 'InChI=1S/C3H8/c1-3-2/h3H2,1-2H3', 
+	        'canon_enant_ich': 'InChI=1S/C3H8/c1-3-2/h3H2,1-2H3', 
             'inchikey': 'ATUOYWHBWRKTHZ-UHFFFAOYSA-N',
             'charge': 0, 'mult': 1,
             'fml': {'C': 3, 'H': 8}, 
@@ -124,10 +130,10 @@ def test__mod_spc_dct_hof_basis():
         'cbh2_CCO': {
             'smiles': 'CCO',
             'inchi': 'InChI=1S/C2H6O/c1-2-3/h3H,2H2,1H3',
-	    'canon_enant_ich': 'InChI=1S/C2H6O/c1-2-3/h3H,2H2,1H3', 
+	        'canon_enant_ich': 'InChI=1S/C2H6O/c1-2-3/h3H,2H2,1H3', 
             'inchikey': 'LFQSCWFLJHTTHZ-UHFFFAOYSA-N',
             'charge': 0, 'mult': 1,
-	    'fml': {'C': 2, 'H': 6, 'O': 1}, 
+	        'fml': {'C': 2, 'H': 6, 'O': 1}, 
             'mc_nsamp': (True, 3, 1, 3, 100, 12),
             'hind_inc': 0.523598775598298,
             'hbond_cutoffs': (4.55, 1.92)}

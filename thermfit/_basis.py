@@ -46,7 +46,7 @@ def _prepare_basis(ref_scheme, spc_dct, zrxn, print_log,
 
     # Get objects from spc_names
     spc_str = ', '.join(spc_names)
-    spc_ichs = [spc_dct[spc]['inchi'] for spc in spc_names]
+    spc_ichs = [spc_dct[spc]['canon_enant_ich'] for spc in spc_names]
 
     # Begin prints
     if print_log:
