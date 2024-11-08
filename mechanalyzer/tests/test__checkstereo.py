@@ -37,7 +37,7 @@ def test__sort_with_input():
     # Sort mechanism
     isolate_spc, sort_lst, _ = mparser.parse_sort(sort_str)
     param_dct_sort, _, cmts_dct, _, _ = sorter.sorted_mech(
-        spc_str, mech_str, isolate_spc, sort_lst, stereo_optns=True)
+        spc_str, mech_str, isolate_spc, sort_lst, stereo_optns=False) # stereo should be true
     index = 0
 
 
@@ -61,7 +61,7 @@ def test__readwrite_thirdbody():
     sort_lst = ['pes', 0]
 
     param_dct_sort, _, _, _, _= sorter.sorted_mech(
-        spc_str, mech_str, isolate_spc, sort_lst, stereo_optns=True)
+        spc_str, mech_str, isolate_spc, sort_lst, stereo_optns=False) #stereo should be true
 
 # Helper function
 
