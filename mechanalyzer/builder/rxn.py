@@ -58,7 +58,7 @@ def build_mechanism(mech_spc_dct, mech_rxn_dct, rxn_series, stereo=False, nprocs
             # Generate Reactions
             # for ichs in rct_ichs:
             #    ini_rxns += generate_reactions(ichs, allowed_prd_ichs, rtyp)
-            ini_rxns_infos = execute_function_in_parallel(
+            ini_rxns_infos += execute_function_in_parallel(
                 generate_reactions, rcts_lst, (mech_spc_dct, allowed_prds_lst, ReacInfo),
                 nprocs=nprocs)
         # Add stereo
@@ -84,8 +84,10 @@ def build_mechanism(mech_spc_dct, mech_rxn_dct, rxn_series, stereo=False, nprocs
                 # log4 = _stereo_results(_rxn, ste_rxns_lst, rem_rxns)
                 # print(log1 + log2 + log3 + log4)
         else:
-            rxns_info = ini_rxns_infos
+            rxns_infos = ini_rxns_infos
 
+        print('rxn_infos')
+        print(rxns_infos)
         # Update the mechanism objects with unique spc and rxns
         mech_spc_dct = update_spc_dct_from_reactions(
             rxns_infos, mech_spc_dct)
