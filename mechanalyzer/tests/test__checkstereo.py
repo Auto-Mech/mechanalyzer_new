@@ -85,6 +85,7 @@ def _read_files(spc_path, mech_path, sort_path):
     return spc_str, mech_str, sort_str
 
 
-
-# test__sort_with_input()   
-# test__readwrite_thirdbody()    
+if __name__ == '__main__':
+    print('tests to be fixed')
+    #test__sort_with_input()   
+    #test__readwrite_thirdbody()    
