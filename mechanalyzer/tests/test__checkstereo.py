@@ -24,6 +24,7 @@ MECH_TYPE = 'chemkin'
 
 def test__sort_with_input():
     """ sort by using the auxlilary input files to specify parameters
+        TEST FAILS. REASON IS CANON_ENANT. TO FIX
     """
 
     # Read the mechanism files into strings
@@ -36,15 +37,15 @@ def test__sort_with_input():
     # Sort mechanism
     isolate_spc, sort_lst, _ = mparser.parse_sort(sort_str)
     param_dct_sort, _, cmts_dct, _, _ = sorter.sorted_mech(
-        spc_str, mech_str, isolate_spc, sort_lst, stereo_optns=False)
+        spc_str, mech_str, isolate_spc, sort_lst, stereo_optns=True)
     index = 0
 
 
 
 def test__readwrite_thirdbody():
     """ test mechanalyzer.parser.sort
-
         Checks read/write of a small set of rxns involving third bodies
+        TEST FAILS. REASON IS CANON_ENANT. TO FIX
     """
 
 
@@ -60,7 +61,7 @@ def test__readwrite_thirdbody():
     sort_lst = ['pes', 0]
 
     param_dct_sort, _, _, _, _= sorter.sorted_mech(
-        spc_str, mech_str, isolate_spc, sort_lst, stereo_optns=False)
+        spc_str, mech_str, isolate_spc, sort_lst, stereo_optns=True)
 
 # Helper function
 
@@ -84,6 +85,6 @@ def _read_files(spc_path, mech_path, sort_path):
     return spc_str, mech_str, sort_str
 
 
-if __name__ == '__main__':
-   test__sort_with_input()   
-   test__readwrite_thirdbody()    
+
+# test__sort_with_input()   
+# test__readwrite_thirdbody()    

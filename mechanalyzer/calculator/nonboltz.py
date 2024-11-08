@@ -293,7 +293,6 @@ def get_max_reactivity(hot_sp, hot_sp_df, therm_df, T0, Tref):
                      for prds in hot_sp_df['prd_names_lst'].values])
 
     for rxn in hot_sp_df.index:
-        print(rxn)
         rcts = hot_sp_df['rct_names_lst'][rxn]
         prds = hot_sp_df['prd_names_lst'][rxn]
         # used to filter out too fast isomerization channels, but causes failure when only unimol channels are present

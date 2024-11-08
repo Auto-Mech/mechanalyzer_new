@@ -322,7 +322,12 @@ class SortMech:
                       'submech', 'submech_prompt', 'submech_keepsubfuel',
                       'submech_deletelarge', 'maxval', 'maxratio',
                       ]
-
+        # check that all criteria in hierarchy are allowed
+        notavail = [hr for hr in hierarchy[:-1] if hr not in criteria_all]
+        assert len(notavail) == 0, (
+            '*Error: classification according to {} not available; criteria are: \n {}'.format(notavail,
+                                                                                               '\n'.join(criteria_all))
+        )
         # check on pes/subpes criteria:
         # if subpes alone, also add pes
         if (('subpes' in hierarchy and 'pes' not in hierarchy) or
