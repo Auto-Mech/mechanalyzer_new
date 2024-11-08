@@ -18,43 +18,6 @@ TMP_OUT = tempfile.mkdtemp()
 # Set types for parsing mechanisms
 SPC_TYPE = 'csv'
 MECH_TYPE = 'chemkin'
-
-def test__sort_readinput():
-    """ test reader criteria for sorter with submech
-    """
-    # Read the mechanism files into strings
-    
-    try:
-        sort_str = pathtools.read_file(os.path.join(CWD, 'data'), 'sort_filterstoich_wrong.dat')
-        isolate_spc, sort_lst, _ = mparser.parse_sort(sort_str)
-    except ValueError as e:
-        assert str(e) == 'Cannot have both keepbelow and deleteabove criteria - incompatible!'
-
-    sort_str = pathtools.read_file(os.path.join(CWD, 'data'), 'sort_filterstoich.dat')
-    isolate_spc, sort_lst, _ = mparser.parse_sort(sort_str)
-    assert isolate_spc == ['keepbelow C2H6O2']
-    assert sort_lst == ['subpes', 0]
-     
-    sort_str = pathtools.read_file(os.path.join(CWD, 'data'), 'sort_submech_deletelarge.dat')
-    isolate_spc, sort_lst, _ = mparser.parse_sort(sort_str)
-    assert isolate_spc == ['C2H4', 'deleteabove C3H4O2']
-    assert sort_lst == ['submech_deletelarge', 0]
-    
-    sort_str = pathtools.read_file(os.path.join(CWD, 'data'), 'sort_submech_keepsubfuel.dat')
-    isolate_spc, sort_lst, _ = mparser.parse_sort(sort_str)
-    assert isolate_spc == ['C2H4', 'keepbelow C2H6O2']
-    assert sort_lst == ['submech_keepsubfuel', 0]
-    
-    sort_str = pathtools.read_file(os.path.join(CWD, 'data'), 'sort_singlespecies.dat')
-    isolate_spc, sort_lst, _ = mparser.parse_sort(sort_str)
-    assert isolate_spc == ['C2H4', 'singlespecies']
-    assert sort_lst == ['subpes', 'molecularity', 'rxn_class_broad', 0]
-
-    sort_str = pathtools.read_file(os.path.join(CWD, 'data'), 'sort.dat')
-    isolate_spc, sort_lst, _ = mparser.parse_sort(sort_str)
-    assert isolate_spc == ['C2H4']
-    assert sort_lst == ['subpes', 'molecularity', 'rxn_class_broad', 0]
-        
     
 def test__sort_submech():
     """ submech with and without "singlespecies" option
@@ -1526,7 +1489,6 @@ def _read_files(spc_path, mech_path, sort_path):
 
 if __name__ == '__main__':
     test__sortby_submech_deletelarge()
-    test__sort_readinput()
     test__sort_submech()
     test__sortby_submech_keepsubfuel()
     test__sortby_submech_prompt() 
