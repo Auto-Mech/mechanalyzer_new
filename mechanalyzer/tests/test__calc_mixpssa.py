@@ -11,6 +11,7 @@ from mechanalyzer.parser._util import resort_ktp_labels
 from mechanalyzer import calculator
 import chemkin_io # better to remove, but would need too many data to write in this file
 
+CWD = os.path.dirname(os.path.realpath(__file__))
 FILE1 = 'data/pssa/C6H5C3H3.mech'
 FILE2 = 'data/pssa/C7H5C3H4.mech'
 THERM1 = 'data/pssa/C6H5C3H3.therm'
@@ -114,8 +115,6 @@ RESULTS2 = {(('C7H5', 'C3H4-A'), ('C9H6CH2', 'H'), (None,)): {0.1: (np.array([ 5
        1.11395009e+07, 1.19115267e+07, 1.17476378e+07, 1.08564330e+07]))}}
 
 #####################################################################
-# Set path to current directory where MESS files exist
-CWD = os.getcwd()
 
 # ktp dct
 

@@ -15,7 +15,7 @@ DFG = {
     'H5H3ratio': 0,
     'kratio': 1e50, #depends too much on temperature to make it a default that makes sense
     'kabs': 1e50,
-    'lookforpromptchains': 1 
+    'lookforpromptchains': 0 
 }
 
 # Functions to take the mechanism strings (may want to further simplify)
@@ -37,8 +37,8 @@ def sorted_mech(spc_str, mech_str, isolate_spc, sort_lst, spc_therm_dct=None, dc
     srt_mch, rxn_param_dct = _sort_objs(
         spc_str, mech_str, sort_lst, isolate_spc, stereo_optns=stereo_optns)
 
-    pes_groups = None
-    rxns_filter = None
+    pes_groups = ''
+    rxns_filter = ''
     # if prompt groups detected: retrieve grps info
     if 'submech_prompt' in sort_lst and spc_therm_dct and dct_flt_grps:
         DFG.update(dct_flt_grps)

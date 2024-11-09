@@ -35,5 +35,6 @@ prompt_filter # not mandatory. here below: all default filters reported
                      # if they belong to a PES that would be excluded from calculations, they are 
                      # treated according to the thermal model
                      # i.e., no need to specify pedoutput/hotenergies in mess input. 
+    lookforpromptchains = 0 # don't search for prompt chains (multiple prompt rxns in a row)
 end
 
