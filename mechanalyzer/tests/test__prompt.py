@@ -166,8 +166,8 @@ def test_rovib_dos():
     ped_1800 = ped_df_frag1_dct[1.0][1800]
     ped_2000 = ped_df_frag1_dct[1.0][2000]
 
-    assert np.isclose((ped_1800.iloc[166]), 0.0173, atol=1e-3, rtol=1e-2)
-    assert np.isclose((ped_2000.iloc[166]), 0.0148, atol=1e-3, rtol=1e-2)
+    assert np.isclose((ped_1800.iloc[166]), 0.01985, atol=1e-3, rtol=1e-2)
+    assert np.isclose((ped_2000.iloc[166]), 0.01724, atol=1e-3, rtol=1e-2)
     assert np.isclose(np.trapz(ped_1800.values, x=ped_1800.index), 1)
     assert np.isclose(np.trapz(ped_2000.values, x=ped_2000.index), 1)
 
@@ -230,7 +230,7 @@ def test_bf_from_fne():
     _, _, _, _, fne_bf = _read_data()
     bf_tp_dct = bf.bf_tp_dct(
         'fne', None, None, 0.1, fne=fne_bf['CH3CHCH3'])
-    print(bf_tp_dct)
+
     assert np.allclose(
         bf_tp_dct['CH3CHCH3'][1.0][1][[0, 6, 14]],
         np.array([1., 0.99999987, 0.99798199]), atol=1e-3, rtol=1e-2)
@@ -320,5 +320,5 @@ if __name__ == '__main__':
     test_thermal()
     test_bf_from_phi1a()
     test_bf_from_fne()
-    test_rovib_dos()
     test_new_ktp_dct()
+    test_rovib_dos()

@@ -204,10 +204,20 @@ def double_arr(temps, kts, sing_params, tref=1.0, dbltol=15, dbl_iter=1):
         # Perform a least-squares fit
         # note: previous version scipy.optimize.leastsq (unbounded): used method='lm'
         # same or better results obtained with x_scale='jac' for new cases tested
-        plsq = least_squares(_resid_func, init_guess, bounds=bounds,
-                             args=(temps, kts, doub_tref), x_scale = 'jac', #method = 'lm',
-                             ftol=1.0E-8, xtol=1.0E-8, max_nfev=100000)
-
+        try:
+            plsq = least_squares(_resid_func, init_guess, bounds=bounds,
+                                args=(temps, kts, doub_tref), x_scale = 'jac', #method = 'lm',
+                                ftol=1.0E-8, xtol=1.0E-8, max_nfev=100000)
+        except ValueError: #test older method without bounds
+            try:
+                plsq = least_squares(_resid_func, init_guess,
+                                    args=(temps, kts, doub_tref), method='lm',
+                                    ftol=1.0E-8, xtol=1.0E-8, max_nfev=100000)
+            except ValueError:
+                plsq = least_squares(_resid_func, init_guess,
+                                    loss = 'arctan',
+                                    args=(temps, kts, doub_tref),
+                                    ftol=1.0E-8, xtol=1.0E-8, max_nfev=100000)
         # Retrieve the fit params and convert A back to the input tref
         raw_params = list(plsq.x)  # list of length 6
         raw_params[0] = raw_params[0] * (tref / doub_tref) ** raw_params[1]
