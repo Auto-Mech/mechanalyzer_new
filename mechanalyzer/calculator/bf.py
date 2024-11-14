@@ -87,8 +87,11 @@ def rename_ktp_dct(ktp_dct, label, hotsp_dct):
 
     renamed_ktp_dct = {}
     spc0 = list(set(hotsp_dct.keys()).intersection(label[1]))[0]
-    renamed_ktp_dct[label] = ktp_dct[spc0]
-    ktp_dct.pop(spc0)
+    if spc0 in ktp_dct.keys():
+        renamed_ktp_dct[label] = ktp_dct[spc0]
+        ktp_dct.pop(spc0)
+    else:
+        print('*Warning: hot spc {} not found in dct. dissociates completely?'.format(spc0))
 
     label1 = list(label[1])
     label1.remove(spc0)
@@ -173,7 +176,7 @@ def bf_tp_df_full(ped_df, hotbf_df):
     return bf_tp_df
 
 
-def bf_tp_df_todct(bf_tp_df, bf_threshold = 1e-2, savefile=False, rxn='', model=''):
+def bf_tp_df_todct(bf_tp_df, bf_threshold = 1e-3, savefile=False, rxn='', model=''):
     """ Converts the dataframe of hot branching fractions to dictionary and
         excludes invalid BFs
 
@@ -294,8 +297,9 @@ def bf_df_fromktpdct(ktp_dct, reac_str, temps, pressures):
 
             # warning for neg vals - absolute value
             if any(bf_series.values < 0):
-                print('Warning: found negative BFs at {:1.0f} K and {:1.1e} atm'
-                        .format(temp, pressure))
+                # remove warning- too verbose
+                # print('Warning: found negative BFs at {:1.0f} K and {:1.1e} atm'
+                #         .format(temp, pressure))
                 bf_series = abs(bf_series)
             bf_tp_df.at[temp, pressure] = bf_series/np.sum(bf_series.values)
             #bf_tp_df[pressure][temp] = bf_series/np.sum(bf_series.values)
