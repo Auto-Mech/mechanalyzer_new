@@ -335,23 +335,21 @@ class PEDModels:
 
             # calculate rho_non1(ene1_vect)
             rho_non1 = []
-            for idx in self.ene1_vect:
-                # first iter should be 0
+            #for idx in self.ene1_vect: 
+            ###old, relied on the fact that energy vector had spacing of 1, however not always accurate
+            for idx, _ in enumerate(self.ene1_vect[:-1]):
                 # the sum of the energies in rhovib_prod2 and
-                # rho_trasl is always ene1
-                idx_ene_int = np.arange(0, idx+1, dtype=int)
+                # rho_trasl is always ene1 
+                # ene1 = ene1_vect_w0[idx_ene_int] + ene1_vect_w0[idx_ene_int[::-1]]
+                # old # idx_ene_int = np.arange(0, idx+1, dtype=int)
+                idx_ene_int = np.arange(0, idx+2, dtype=int)
                 idx_ene_minus_ene_int = idx_ene_int[::-1]
                 rho_non1_integrand = (
                     rho_rovib_prod2[idx_ene_int] *
                     rho_trasl[idx_ene_minus_ene_int]
                 )
-                try:
-                    rho_non1.append(np.trapz(rho_non1_integrand,
-                                             x=self.ene1_vect[idx_ene_int]))
-                except IndexError:
-                    continue
-                    #probably just missed 1 index
-                    #print(pressure, temp, self.ene1_vect, idx, idx_ene_int)
+                rho_non1.append(np.trapz(rho_non1_integrand,
+                                        x=self.ene1_vect[idx_ene_int]))
 
             rho_non1 = np.array(rho_non1)
 
