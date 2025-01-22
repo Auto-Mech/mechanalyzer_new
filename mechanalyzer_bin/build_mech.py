@@ -21,7 +21,6 @@ BLD_STR = ioformat.pathtools.read_file(
     remove_comments='#', remove_whitespace=True)
 
 FILE_DCT, RSERIES = mechanalyzer.parser.build_input_file(BLD_STR)
-
 # Read the spc_dct and rxn_param_dct
 INP_SPC_STR = ioformat.pathtools.read_file(
     CWD, FILE_DCT['inp_spc'],
@@ -43,7 +42,6 @@ mech_spc_dct = mechanalyzer.parser.new_spc.parse_mech_spc_dct(
 rxn_param_dct = mechanalyzer.parser.mech.parse_mechanism(
     INP_MECH_STR, 'chemkin')
 isolate_spc, sort_lst, _ = mechanalyzer.parser.mech.parse_sort(SORT_STR)
-
 # Generate the requested reactions
 mech_spc_dct, rxn_param_dct = mechanalyzer.builder.rxn.build_mechanism(
     mech_spc_dct, rxn_param_dct,

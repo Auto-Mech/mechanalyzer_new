@@ -37,7 +37,6 @@ def build_mechanism(mech_spc_dct, mech_rxn_dct, rxn_series, stereo=False, nprocs
     # Initialize new_spc (needed for sequential steps
     # new_spc_lst = None
     print('---------------------------------------------------------\n')
-
     # Loop over the reaction series consisting of reactants and reaction type
     for sidx, series in enumerate(rxn_series):
         rct1_set, rct2_set, allowed_prds_lst, rxn_typs = series
@@ -59,11 +58,9 @@ def build_mechanism(mech_spc_dct, mech_rxn_dct, rxn_series, stereo=False, nprocs
             # Generate Reactions
             # for ichs in rct_ichs:
             #    ini_rxns += generate_reactions(ichs, allowed_prd_ichs, rtyp)
-            ini_rxns_infos_tmp = execute_function_in_parallel(
+            ini_rxns_infos += execute_function_in_parallel(
                 generate_reactions, rcts_lst, (mech_spc_dct, allowed_prds_lst, ReacInfo),
                 nprocs=nprocs)
-            print(ini_rxns_infos_tmp)
-            print('does it make it here')
         # Add stereo
         if stereo:
             rxns = ()
@@ -89,11 +86,15 @@ def build_mechanism(mech_spc_dct, mech_rxn_dct, rxn_series, stereo=False, nprocs
         else:
             rxns_infos = ini_rxns_infos
 
+        print('rxn_infos')
+        print(rxns_infos)
         # Update the mechanism objects with unique spc and rxns
         mech_spc_dct = update_spc_dct_from_reactions(
             rxns_infos, mech_spc_dct)
+        print(list(mech_spc_dct.keys()))
         mech_rxn_dct = update_rxn_dct(
             rxns_infos, mech_rxn_dct, mech_spc_dct)
+        print(list(mech_rxn_dct.keys()))
 
         print('\n---------------------------------------------------------\n')
 
@@ -104,8 +105,9 @@ def generate_reactions(
         mech_spc_dct, allowed_prds_lst, ReacInfo, rcts_lst, output_queue=None):
     """ For a given reactants
     """
-
+    rxns_info = ()
     for rct_names in rcts_lst:
+        print('rct names', rct_names)
         rct_ichs = [mech_spc_dct[name]['inchi'] for name in rct_names]
         # rct_mults = [mech_spc_dct[name]['mult'] for name in rct_names]
         _rct_smis = tuple(map(automol.chi.smiles, rct_ichs))
@@ -123,13 +125,12 @@ def generate_reactions(
                 mech_spc_dct[name]['mult'],) for name in allowed_prds_lst)
         else:
             allowed_prds_info_lst = ()
-        rcts_info = ((
+        rcts_info = tuple((
             mech_spc_dct[name]['inchi'],
             mech_spc_dct[name]['charge'],
             mech_spc_dct[name]['mult'],) for name in rct_names)
 
         # Build list of generated reactions including reactants and products
-        rxn_infos = ()
         for pidx, prds_info in enumerate(prds_info_lst):
             # Don't add if requested products not found
             if allowed_prds_lst:
@@ -143,15 +144,12 @@ def generate_reactions(
             _prd_smis = tuple(map(automol.chi.smiles, (prd[0] for prd in prds_info)))
             log += f'\nFound Product(s) {pidx+1}: {_prd_smis}'
 
-            rxn_infos += ((rcts_info, prds_info, (None,)),)
+            rxns_info += ((rcts_info, prds_info, (None,)),)
 
-        if not prds_info:
+        if not prds_info_lst:
             log += '\nNO Product(s) Found'
         print(log)
-        print('does it make it here')
-        output_queue.put(rxn_infos)
-        print('or here')
-        # return rxn_ichs
+    output_queue.put(rxns_info)
 
 
 # Functions to set lists for mech building step
