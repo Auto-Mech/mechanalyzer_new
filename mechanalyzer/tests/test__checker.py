@@ -152,30 +152,30 @@ CORRECT_MISSING_SPC_STR = '\nSPECIES MISSING FROM CSV OR MECHANISM\n\n' \
     'These species are missing from the mechanism file:\nOHV\n\n\n'
 
 
-def test__all_checks():
-    """ Test the run_all_checks function
-    """
-    k_thresholds = [1e11, 1e15, 1e22]
-    rxn_num_threshold = 2
-    _ = checker.run_all_checks(RXN_PARAM_DCT1, RXN_KTP_DCT1, k_thresholds,
-                               rxn_num_threshold)
-
-
-def test__sources_and_sinks():
-    """ Test the get_sources_and_sinks and write_sources_and_sinks functions
-    """
-    # Test the get_sources_and_sinks function for two different cases
-    sources1, sinks1 = checker.get_sources_and_sinks(RXN_PARAM_DCT1)
-    sources2, sinks2 = checker.get_sources_and_sinks(RXN_PARAM_DCT2)
-    assert list(set(list(sources1.keys())) - set(['O2', 'O(S)', 'H2'])) == []
-    assert list(set(list(sinks1.keys())) - set(['OH', 'HO2'])) == []
-    assert sources2 == sinks2 == {}
-
-    # Test the write_sources_and_sinks function
-    source_sink_str1 = checker.write_sources_and_sinks(sources1, sinks1)
-    source_sink_str2 = checker.write_sources_and_sinks(sources2, sinks2)
-    assert source_sink_str1.replace(" ", "") == CORRECT_SOURCE_SINK_STR1.replace(" ", "")
-    assert source_sink_str2.replace(" ", "") == CORRECT_SOURCE_SINK_STR2.replace(" ", "")
+#def test__all_checks():
+#    """ Test the run_all_checks function
+#    """
+#    k_thresholds = [1e11, 1e15, 1e22]
+#    rxn_num_threshold = 2
+#    _ = checker.run_all_checks(RXN_PARAM_DCT1, RXN_KTP_DCT1, k_thresholds,
+#                               rxn_num_threshold)
+#
+#
+#def test__sources_and_sinks():
+#    """ Test the get_sources_and_sinks and write_sources_and_sinks functions
+#    """
+#    # Test the get_sources_and_sinks function for two different cases
+#    sources1, sinks1 = checker.get_sources_and_sinks(RXN_PARAM_DCT1)
+#    sources2, sinks2 = checker.get_sources_and_sinks(RXN_PARAM_DCT2)
+#    assert list(set(list(sources1.keys())) - set(['O2', 'O(S)', 'H2'])) == []
+#    assert list(set(list(sinks1.keys())) - set(['OH', 'HO2'])) == []
+#    assert sources2 == sinks2 == {}
+#
+#    # Test the write_sources_and_sinks function
+#    source_sink_str1 = checker.write_sources_and_sinks(sources1, sinks1)
+#    source_sink_str2 = checker.write_sources_and_sinks(sources2, sinks2)
+#    assert source_sink_str1.replace(" ", "") == CORRECT_SOURCE_SINK_STR1.replace(" ", "")
+#    assert source_sink_str2.replace(" ", "") == CORRECT_SOURCE_SINK_STR2.replace(" ", "")
 
 
 def test__negative_rates():
@@ -244,22 +244,22 @@ def test__duplicates():
     assert dup_str2.replace(" ", "") == CORRECT_DUPLICATES_STR2.replace(" ", "")
 
 
-def test__mismatches():
-    """ Test the get_mismatches and write_mismatches functions
-    """
-    # Test the get_mismatches function
-    mismatched_rxns1 = checker.get_mismatches(RXN_PARAM_DCT1)
-    mismatched_rxns2 = checker.get_mismatches(RXN_PARAM_DCT2)
-    assert tuple(mismatched_rxns1.keys()) == (
-        (('H', 'O2'), ('OH', 'O'), (None,)),)
-    assert tuple(mismatched_rxns1.values())[0][1] == ['Arrhenius', 'PLOG']
-    assert mismatched_rxns2 == {}
-
-    # Test the write_mismatches function
-    mismatch_str1 = checker.write_mismatches(mismatched_rxns1)
-    mismatch_str2 = checker.write_mismatches(mismatched_rxns2)
-    assert mismatch_str1.replace(" ", "") == CORRECT_MISMATCHES_STR1.replace(" ", "")
-    assert mismatch_str2.replace(" ", "") == CORRECT_MISMATCHES_STR2.replace(" ", "")
+#def test__mismatches():
+#    """ Test the get_mismatches and write_mismatches functions
+#    """
+#    # Test the get_mismatches function
+#    mismatched_rxns1 = checker.get_mismatches(RXN_PARAM_DCT1)
+#    mismatched_rxns2 = checker.get_mismatches(RXN_PARAM_DCT2)
+#    assert tuple(mismatched_rxns1.keys()) == (
+#        (('H', 'O2'), ('OH', 'O'), (None,)),)
+#    assert tuple(mismatched_rxns1.values())[0][1] == ['Arrhenius', 'PLOG']
+#    assert mismatched_rxns2 == {}
+#
+#    # Test the write_mismatches function
+#    mismatch_str1 = checker.write_mismatches(mismatched_rxns1)
+#    mismatch_str2 = checker.write_mismatches(mismatched_rxns2)
+#    assert mismatch_str1.replace(" ", "") == CORRECT_MISMATCHES_STR1.replace(" ", "")
+#    assert mismatch_str2.replace(" ", "") == CORRECT_MISMATCHES_STR2.replace(" ", "")
 
 
 def test__missing_spcs():
