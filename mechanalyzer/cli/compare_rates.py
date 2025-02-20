@@ -4,60 +4,27 @@
 import os
 import sys
 import numpy
-import yaml
 import mechanalyzer.calculator.compare as compare
 import mechanalyzer.plotter.rates as plot_rates
-import mechanalyzer.plotter._util as util
+import mechanalyzer.plotter._util as plot_util
 import mechanalyzer.parser.new_spc as spc_parser
 import mechanalyzer.parser.ckin_ as ckin_parser
+from mechanalyzer.cli import util
 from ioformat import pathtools
-
-
-def read_mechs_yaml(mechs_yaml_file):
-    """ read the yaml file that specifies each mechanism file
-        for each mechanism, makes sure all files are given
-    """
-    def _mech_is_fully_specified(mech_data):
-        """ make sure all files are given in yaml for mechanism
-        """
-        keys = ['rate_file', 'therm_file', 'species_csv']
-        _fully_specified = True
-        if not all(key in mech_data for key in keys):
-            _fully_specified = False
-            print(
-                'missing in yaml: ', 
-                ','.join([key for key in keys if key not in mech_data]))
-        return _fully_specified
-
-    with open(mechs_yaml_file, 'r') as file:
-        mechs = yaml.safe_load(file)
-    mechs =  {
-        key: mech_files for key, mech_files in mechs.items() 
-        if _mech_is_fully_specified(mech_files)}
-
-    labels = []
-    mech_files = []
-    therm_files = []
-    csv_files = []
-    for key, mech in mechs.items():
-        labels.append(key)
-        mech_files.append(mech['rate_file'])
-        therm_files.append(mech['therm_file'])
-        csv_files.append(mech['species_csv'])
-
-    return labels, mech_files, therm_files, csv_files
 
 
 def main(
         mechs_yaml='mechs.yaml',
-        plot_filename='rate_plot.pdf',
-        out_txt_filename='ordering.txt',
-        job_path='.',
+        plot_fname='rate_plot.pdf',
+        out_txt_fname='ordering.txt',
+        job_path='',
         temps_lst=None, pressures=None,
         sort_method=None, rev_rates=True,
-        remove_loners=True, write_file=False):
+        remove_loners=True):
 
-    labels, mech_files, therm_files, csv_files = read_mechs_yaml(mechs_yaml)
+    print('job_path ', job_path)
+    labels, mech_files, therm_files, csv_files = util.read_mechs_yaml(
+        mechs_yaml, 'rates')
     if temps_lst is None or len(temps_lst) < 2:
         temps_lst = [numpy.linspace(500, 1000, 16)]
     else:
@@ -75,16 +42,16 @@ def main(
     temps = temps_lst[0]  # function receives a single Numpy array of temps
     algn_rxn_ktp_dct = compare.get_algn_rxn_ktp_dct(
         rxn_ktp_dcts, spc_therm_dcts, spc_dcts, temps, rev_rates=rev_rates,
-        remove_loners=remove_loners, write_file=write_file)
+        remove_loners=remove_loners)
 
     # Run the plotter
     figs = plot_rates.build_plots(
         algn_rxn_ktp_dct,
         mech_names=labels,
         ratio_sort=bool(sort_method == 'ratios'))
-    util.build_pdf(figs, filename=plot_filename, path=job_path)
+    plot_util.build_pdf(figs, filename=plot_fname, path=job_path)
 
     # Write the ordered text file
     FSTR = compare.write_ordered_str(algn_rxn_ktp_dct, dct_type='rxn')
-    pathtools.write_file(FSTR, job_path, out_txt_filename)
+    pathtools.write_file(FSTR, job_path, out_txt_fname)
 

@@ -111,7 +111,7 @@ COMB_SPC_DCT = compare.get_mult_comb_mech_spc_dct(SPC_DCTS)
 # Run the plotter
 FIGS, SORT_ALGN_SPC_THERM_DCT = plot_thermo.build_plots(
     ALGN_SPC_THERM_DCT, spc_dct=COMB_SPC_DCT, mech_names=MECH_NAMES,
-    sort=SORT, sort_instr=SORT_INSTR, sort_temp=SORT_TEMP)
+    sort=SORT, sort_method=SORT_INSTR, sort_temp=SORT_TEMP)
 util.build_pdf(FIGS, filename=OUTPUT_FILENAME, path=JOB_PATH)
 
 # Write the ordered text file
