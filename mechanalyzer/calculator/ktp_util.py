@@ -6,7 +6,23 @@ import numpy
 import copy
 import pandas as pd
 
+# functions for reaction keys of rxn/ktp dictionaries
+def get_rxns_for_species(spc, all_rxns):
+    """ filters keys of all_rxns and returns only those in which spc is involved in
 
+    Args:
+        spc (str): species of interest
+        all_rxns (list): rxns tuples [((A,),(B,),(thrdby,)), ...]
+
+    Returns:
+        rxns: filtered reaction list
+    """
+    rxns = []
+    for rxn in all_rxns:
+        if spc in rxn[0] or spc in rxn[1]:
+            rxns.append(rxn)
+    return rxns
+            
 # functions for ktp dictionaries
 
 def get_aligned_rxn_ratio_dct(aligned_rxn_dct_entry):
