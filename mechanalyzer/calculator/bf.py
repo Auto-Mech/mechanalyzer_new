@@ -201,7 +201,7 @@ def bf_tp_df_todct(bf_tp_df, bf_threshold = 1e-3, savefile=False, rxn='', model=
     allspecies = bf_tp_df.iloc[0, 0].index
     bf_tp_dct_out = {}
     #set upper tol of bfrac to 1 if only 1 species available
-    bftol_upper = 1*(len(allspecies) == 1) + 0.999*(len(allspecies) > 1)
+    bftol_upper = 1 - 1e-12*(len(allspecies) > 1)
     
     # fill the dictionary:
     for spc in allspecies:
