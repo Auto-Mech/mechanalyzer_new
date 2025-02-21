@@ -1,6 +1,13 @@
 import click
+import numpy as np
 
-from mechanalyzer.cli import run_sort, ste_mech, compare_rates, compare_thermo
+from mechanalyzer.cli import (sort,
+                              prompt,
+                              pssa,
+                              ste_mech, 
+                              compare_rates, 
+                              compare_thermo
+                              )
 
 
 @click.group()
@@ -59,7 +66,7 @@ def main():
     show_default=True,
     help="Output PES groups file name",
 )
-def sort(
+def sortmech(
     mech: str = "mechanism.dat",
     spc: str = "species.csv",
     therm: str = "therm.dat",
@@ -67,9 +74,9 @@ def sort(
     outmech: str = "outmech.dat",
     outspc: str = "outspc.csv",
     outgroups: str = "pes_groups.dat",
-):
+    ):
     """Sort the reactions in a mechanism"""
-    run_sort.main(
+    sort.main(
         mech=mech,
         spc=spc,
         therm=therm,
@@ -263,3 +270,170 @@ def compare_thermo(
 def expand():
     """Expand stereochemistry for a mechanism"""
     ste_mech.main()
+
+
+@main.command()
+@click.option(
+    "-f",
+    "--flds",
+    default= ['',],
+    show_default=True,
+    required=True,
+    multiple=True,
+    help="directories with mess files; pass each directory as a single -f argument",
+)
+@click.option(
+    "-i",
+    "--messinput",
+    default="mess.inp",
+    show_default=True,
+    help="mess input",
+)
+@click.option(
+    "-o",
+    "--messoutput",
+    default="mess.out",
+    show_default=True,
+    help="mess rate output",
+)
+@click.option(
+    "-ke",
+    "--outputmicro",
+    default="ke.out",
+    show_default=True,
+    help="mess microcanonical rate output",
+)
+@click.option(
+    "-l",
+    "--log",
+    default="mess.log",
+    show_default=True,
+    help="mess log file",
+)
+@click.option(
+    "-m",
+    "--model",
+    default="rovib_dos",
+    show_default=True,
+    help="Model to compute prompt branching fractions",
+)
+@click.option(
+    "-b",
+    "--bfthresh",
+    default=0.1,
+    show_default=True,
+    help="keep reactions if contributing more than this threshold",
+)
+@click.option(
+    "-fit",
+    "--fitmethod",
+    default="plog",
+    show_default=True,
+    help="Fitting method",
+)
+@click.option(
+    "-or",
+    "--outputrates",
+    default="rates_prompt.txt",
+    show_default=True,
+    help="Output prompt rates file name",
+)
+def promptcalc(
+    flds: list = ['',],
+    messinput: str = 'mess.inp',
+    messoutput: str = 'mess.out',
+    outputmicro: str = 'ke.out',
+    log: str = 'mess.log',
+    model: str = 'rovib_dos',
+    bfthresh: float = 0.1,
+    fitmethod: str = 'plog',
+    outputrates: str = 'rates_prompt.txt'
+):
+    """Compute prompt effects from mess output files"""
+    prompt.main(
+        flds=flds,
+        messinput=messinput,
+        messoutput=messoutput,
+        outputmicro=outputmicro,
+        log=log,
+        model=model,
+        bfthresh=bfthresh,
+        fitmethod=fitmethod,
+        outputrates=outputrates
+    )
+
+@main.command()
+@click.option(
+    "-i",
+    "--startmech",
+    default='kin.CKI',
+    show_default=True,
+    required=True,
+    help="input mechanism in chemkin format",
+)
+@click.option(
+    "-s",
+    "--pssa_spcs",
+    default=['',],
+    show_default=True,
+    required=True,
+    multiple=True,
+    help="list of species to apply pssa to; provide each -s argument separately",
+)
+@click.option(
+    "-T",
+    "--temprange",
+    default=[500, 2000],
+    show_default=True,
+    multiple=True,
+    help="temperature range for rate constant calculation; provide 2 limits as -T arguments separately",
+)
+@click.option(
+    "-P",
+    "--pvect",
+    default=[1.0,],
+    show_default=True,
+    multiple=True,
+    type=float,
+    help="pressure vector for rate constant calculation; provide pressure values as multiple -P arguments separately",
+)
+@click.option(
+    "-b",
+    "--bfthresh",
+    default=1e-4,
+    show_default=True,
+    help="keep reactions if contributing more than this threshold",
+)
+@click.option(
+    "-t",
+    "--thermofile",
+    default=None,
+    show_default=True,
+    help="thermochemistry file to compute backward rate constants",
+)
+@click.option(
+    "-or",
+    "--outputrates",
+    default="rates_prompt.txt",
+    show_default=True,
+    help="Output prompt rates file name",
+)
+def runpssa(
+    startmech: str='kin.CKI',
+    pssa_spcs: list=['',],
+    temprange: list = [500, 2000],
+    pvect: list =[1.0,],
+    bfthresh: float = 1e-4,
+    thermofile: str = None,
+    outputrates: str = 'pssa_rates.txt',
+):
+    """Sort the reactions in a mechanism"""
+    pssa.main(
+    startmech=startmech,
+    pssa_spcs=pssa_spcs,
+    temprange=temprange,
+    pvect=pvect,
+    bfthresh=bfthresh,
+    thermofile=thermofile,
+    outputrates=outputrates,
+    )
