@@ -24,7 +24,8 @@ ALLOWED_COL_NAMES = (
     'fml',
     'sens',
     'hof',
-    'canon_enant_ich'
+    'canon_enant_ich',
+    'fct_grp'
 )
 
 TRIP_DCT = {
@@ -41,7 +42,7 @@ CMTS = '!'  # character used to define comments
 
 
 def load_mech_spc_dcts(filenames, path, quotechar="'", chk_ste=False,
-                       chk_match=False, verbose=True, canon_ent=True):
+                       chk_match=False, verbose=True, canon_ent=True, rmv_dup=False):
     """ Obtains multiple mech_spc_dcts given a list of spc.csv filenames
 
         :param filenames: filenames of the spc.csv files to be read
@@ -70,7 +71,7 @@ def load_mech_spc_dcts(filenames, path, quotechar="'", chk_ste=False,
 
 
 def load_mech_spc_dct(filename, path, quotechar="'", chk_ste=False, 
-                      chk_match=False, verbose=True, canon_ent=True):
+                      chk_match=False, verbose=True, canon_ent=True, rmv_dup=False):
     """ Obtains a single mech_spc_dct given a spc.csv filename
 
         :param filename: filename of the spc.csv file to be read
@@ -83,6 +84,10 @@ def load_mech_spc_dct(filename, path, quotechar="'", chk_ste=False,
         :type chk_match: Bool
         :param verbose: whether or not to print lots of warnings
         :type verbose: Bool
+        :param canon_ent: add/check if canonical enantiomer
+        :type canon ent: Bool
+        :param rmv_dup: remove multiple occurrences in spc dct instead of exiting
+        :type rmv_dup: Bool
         :return mech_spc_dct: identifying information on species in a mech
         :rtype: dct {spc1: spc_dct1, spc2: ...}
     """
@@ -90,13 +95,13 @@ def load_mech_spc_dct(filename, path, quotechar="'", chk_ste=False,
     file_str = pathtools.read_file(path, filename, print_debug=True)
     mech_spc_dct = parse_mech_spc_dct(
         file_str, quotechar=quotechar, chk_ste=chk_ste, chk_match=chk_match,
-        verbose=verbose, canon_ent=canon_ent)
+        verbose=verbose, canon_ent=canon_ent, rmv_dup=rmv_dup)
 
     return mech_spc_dct
 
 
 def parse_mech_spc_dct(file_str, quotechar="'", chk_ste=False,
-                       chk_match=False, verbose=True, canon_ent=True):
+                       chk_match=False, verbose=True, canon_ent=True, rmv_dup=False):
     """ Obtains a single mech_spc_dct given a string parsed from a spc.csv file
 
         :param file_str: the string that was read directly from the .csv file
@@ -107,8 +112,10 @@ def parse_mech_spc_dct(file_str, quotechar="'", chk_ste=False,
         :type chk_ste: Bool
         :param chk_match: whether or not to check that inchis and smiles match
         :type chk_match: Bool
-        :param add_ste: add stereo layer on inchi if missing
-        :type add_ste: Bool
+        :param canon_ent: add/check if canonical enantiomer
+        :type canon ent: Bool
+        :param rmv_dup: remove multiple occurrences in spc dct instead of exiting
+        :type rmv_dup: Bool
         :param verbose: whether or not to print lots of warnings
         :type verbose: Bool
         :return mech_spc_dct: identifying information on species in a mech
@@ -154,14 +161,25 @@ def parse_mech_spc_dct(file_str, quotechar="'", chk_ste=False,
             cols = parse_line(line, idx, headers, quotechar=quotechar)
             if cols is not None:
                 spc, spc_dct = make_spc_dct(cols, headers)
-                # Check that the species name was not already defined
-                assert spc not in mech_spc_dct, (
-                    f'The species name {spc} appears in the csv file more than'
-                    f' once. The second time is on line {idx + 1}, {line}.')
                 # Fill in the spc_dct and then add it to the mech_spc_dct
                 spc_dct = fill_spc_dct(
                     spc_dct, spc, chk_ste=chk_ste,
                     chk_match=chk_match, canon_ent=canon_ent)
+                # Check that the species name was not already defined
+                if rmv_dup:
+                    if spc in mech_spc_dct:
+                        print('The species {} was already identified. '
+                            'The first and current InChIs are \n'
+                            '{} \n'
+                            '{} \n'
+                            'possibly lumped. Skipping this instance'.format(
+                                spc, spc_dct['inchi'], mech_spc_dct[spc]['inchi'])
+                        )
+                else:
+                    assert spc not in mech_spc_dct, (
+                        f'The species name {spc} appears in the csv file more than'
+                        f' once. The second time is on line {idx + 1}, {line}.')
+
                 mech_spc_dct[spc] = spc_dct
 
             else:
@@ -483,4 +501,29 @@ def add_canonical_enantiomer(mech_spc_dct, dummy=False):
                     spc_dct['inchi'])
             else:
                 spc_dct['canon_enant_ich'] = spc_dct['inchi']
+    return mech_spc_dct
+
+def add_fct_grp_dct(mech_spc_dct, species_subset = 'all'):
+    """ add functional group dictionary to species dictionary
+        mech_spc_dct needs to have either smiles or inchi to get the graph
+    """
+    for spc, dct in mech_spc_dct.items():
+        # if there is a specific subset of species requested: filter
+        if isinstance(species_subset, list):
+            if spc not in species_subset:
+                mech_spc_dct[spc]['fct_grp'] = {}
+                continue
+        if 'inchi' in dct.keys():
+            ich = dct['inchi']
+        elif 'smiles' in dct.keys():
+            ich = automol.smiles.chi(dct['smiles'])
+        try:
+            gra = automol.geom.graph(automol.chi.geometry(ich))
+        except AssertionError as e:
+            print(f'{spc} skipped for failure in geom generation {e}')
+            mech_spc_dct[spc]['fct_grp'] = {}
+            continue
+        
+        mech_spc_dct[spc]['fct_grp'] = automol.graph.classify_species(gra)
+
     return mech_spc_dct

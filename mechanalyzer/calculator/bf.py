@@ -200,6 +200,9 @@ def bf_tp_df_todct(bf_tp_df, bf_threshold = 1e-3, savefile=False, rxn='', model=
     temps, pressures = bf_tp_df.index, bf_tp_df.columns
     allspecies = bf_tp_df.iloc[0, 0].index
     bf_tp_dct_out = {}
+    #set upper tol of bfrac to 1 if only 1 species available
+    bftol_upper = 1 - 1e-12*(len(allspecies) > 1)
+    
     # fill the dictionary:
     for spc in allspecies:
         num_data_highenough = 0
@@ -213,7 +216,7 @@ def bf_tp_df_todct(bf_tp_df, bf_threshold = 1e-3, savefile=False, rxn='', model=
             temp_new = []
             for temp in temps:
                 bfrac = bf_tp_df[pressure][temp][spc]
-                if 1 > bfrac >= 1e-30:
+                if bftol_upper >= bfrac >= 1e-30:
                     # avoid too small values and 1 to avoid discontinuities
                     temp_new.append(temp)
                     bf_temp.append(bfrac)
@@ -267,6 +270,10 @@ def bf_df_fromktpdct(ktp_dct, reac_str, temps, pressures):
     if len(allspecies) == 0:
         print('*Warning: species {} not among reactants - branching fractions\
             asked for but not derived'.format(reac_str))
+    elif len(allspecies) == 1:
+        print('*Warning: species {} has only one product - {}'.format(reac_str, allspecies[0]))
+        print('perhaps check if reversible rxns were ignored')
+        print('if so: add thermo file')
     # turn the list of ktp_dct into series and 
     ktp_sum = dict.fromkeys(pressures)
     for pressure in pressures:

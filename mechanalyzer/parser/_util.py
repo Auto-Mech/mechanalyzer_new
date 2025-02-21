@@ -57,6 +57,7 @@ def order_rct_bystoich(rct_names_lst, spc_dct=None):
 
     return rct_names_lst_ordered
 
+
 def order_names(rct_names):
     """ order names according to higher N of atoms, or length;
         if same length, use alphabetical order
@@ -82,6 +83,7 @@ def order_names(rct_names):
                         
     return rct_names
 
+
 def extract_numfromname(rct_names):
     """ extract numbers from a name string and return their sum
     """
@@ -93,6 +95,7 @@ def extract_numfromname(rct_names):
     
     return sums
 
+
 def remove_fw_rxns(rxn_dct, rxn_lst):
     """ remove all rxns of rxn_list from rxn_dct
     """
@@ -101,6 +104,7 @@ def remove_fw_rxns(rxn_dct, rxn_lst):
             rxn_dct.pop(rxn)
 
     return rxn_dct
+
 
 def remove_rev_rxns(rxn_dct, rxn_lst):
     """

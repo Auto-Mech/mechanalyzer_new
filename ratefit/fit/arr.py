@@ -136,7 +136,10 @@ def single_arr(temps, kts, tref=1.0):
         theta = numpy.linalg.lstsq(coeff_mat, k_vec, rcond=None)[0]
         # Set the fitting parameters
         a_fit, n_fit, ea_fit = numpy.exp(theta[0]), theta[1], theta[2]
-
+    # check on nans
+    if any(numpy.isnan([a_fit, n_fit, ea_fit])):
+        print('*Warning: NaN params found- set all params to 0.')
+        a_fit, n_fit, ea_fit = 0.0, 0.0, 0.0
     # Pack the parameters into an arr_dct and instantiate RxnParams
     arr_dct = {'arr_tuples': [[a_fit, n_fit, ea_fit]]}
     params = RxnParams(arr_dct=arr_dct)

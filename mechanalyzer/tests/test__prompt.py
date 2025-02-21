@@ -1,5 +1,4 @@
-""" test mechanalyzer.calculator
-    similar structure to script in mechanalyzer_bin
+""" test mechanalyzer.calculator prompt functionalities
 """
 
 import os
